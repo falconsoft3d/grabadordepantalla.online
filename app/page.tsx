@@ -1,7 +1,23 @@
 import Link from 'next/link'
 import { FaVideo, FaUsers, FaLock, FaRocket } from 'react-icons/fa'
+import { prisma } from '@/lib/prisma'
 
-export default function Home() {
+async function getStats() {
+  try {
+    const [userCount, videoCount] = await Promise.all([
+      prisma.user.count(),
+      prisma.video.count()
+    ])
+    return { users: userCount, videos: videoCount }
+  } catch (error) {
+    console.error('Error al obtener estadísticas:', error)
+    return { users: 0, videos: 0 }
+  }
+}
+
+export default async function Home() {
+  const stats = await getStats()
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -106,6 +122,36 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 text-white shadow-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-lg mb-2">Total de Usuarios</p>
+                  <p className="text-5xl font-bold">{stats.users.toLocaleString()}</p>
+                </div>
+                <div className="bg-white bg-opacity-20 rounded-full p-6">
+                  <FaUsers className="text-5xl" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-indigo-100 text-lg mb-2">Total de Videos</p>
+                  <p className="text-5xl font-bold">{stats.videos.toLocaleString()}</p>
+                </div>
+                <div className="bg-white bg-opacity-20 rounded-full p-6">
+                  <FaVideo className="text-5xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
@@ -127,7 +173,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2025 GrabadorPantalla.online - Todos los derechos reservados</p>
+          <p>&copy; 2025 Desarrollado por <a href="https://www.marlonfalcon.com" className="underline hover:text-white">www.marlonfalcon.com</a></p>
         </div>
       </footer>
     </div>
