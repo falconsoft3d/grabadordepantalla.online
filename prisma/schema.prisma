@@ -8,28 +8,54 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  videos        Video[]
+  id                    String    @id @default(cuid())
+  name                  String?
+  email                 String    @unique
+  password              String
+  image                 String?
+  googleDriveConnected  Boolean   @default(false)
+  googleClientId        String?
+  googleClientSecret    String?
+  googleAccessToken     String?
+  googleRefreshToken    String?
+  googleTokenExpiry     DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  videos                Video[]
 }
 
 model Video {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  fileName    String
-  fileSize    Int
-  duration    Int?
-  thumbnail   String?
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  fileName        String
+  fileSize        Int
+  duration        Float?
+  thumbnail       String?
+  driveFileId     String?
+  driveLink       String?
+  sharedToDrive   Boolean  @default(false)
+  shortCode       String?  @unique
+  viewCount       Int      @default(0)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views           VideoView[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([userId])
+  @@index([shortCode])
+}
+
+model VideoView {
+  id          String   @id @default(cuid())
+  videoId     String
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  ipAddress   String?
+  userAgent   String?
+  referer     String?
+  createdAt   DateTime @default(now())
+
+  @@index([videoId])
+  @@index([createdAt])
 }

@@ -12,11 +12,13 @@
   "dependencies": {
     "@prisma/client": "^5.7.1",
     "bcryptjs": "^2.4.3",
+    "googleapis": "^167.0.0",
     "jose": "^5.10.0",
     "next": "14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.12.0"
+    "react-icons": "^4.12.0",
+    "recharts": "^3.5.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

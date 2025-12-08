@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       }
     })
 
-    return NextResponse.json(videos)
+    return NextResponse.json({ videos })
   } catch (error) {
     console.log(error, 'VIDEOS_GET_ERROR')
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })
@@ -29,13 +29,17 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const session = await getSession()
+    console.log('SESSION:', session)
 
     if (!session?.userId) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
     const body = await request.json()
+    console.log('BODY:', body)
     const { title, description, fileName, fileSize, duration, thumbnail } = body
+
+    console.log('Creating video with:', { title, fileName, fileSize, duration: typeof duration, userId: session.userId })
 
     const video = await prisma.video.create({
       data: {
@@ -49,9 +53,10 @@ export async function POST(request: Request) {
       }
     })
 
-    return NextResponse.json(video)
+    console.log('Video created:', video)
+    return NextResponse.json({ video })
   } catch (error) {
-    console.log(error, 'VIDEO_POST_ERROR')
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+    console.error('VIDEO_POST_ERROR:', error)
+    return NextResponse.json({ error: 'Error interno', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
   }
 }

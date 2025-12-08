@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { FaVideo } from 'react-icons/fa'
@@ -11,8 +11,26 @@ export default function LoginPage() {
     email: '',
     password: '',
   })
+  const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const response = await fetch('/api/me')
+      if (response.ok) {
+        router.push('/dashboard')
+      }
+    }
+    checkAuth()
+
+    const savedEmail = localStorage.getItem('rememberedEmail')
+    const savedPassword = localStorage.getItem('rememberedPassword')
+    if (savedEmail && savedPassword) {
+      setFormData({ email: savedEmail, password: savedPassword })
+      setRememberMe(true)
+    }
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,6 +52,14 @@ export default function LoginPage() {
         setError(data.error || 'Credenciales inválidas')
         setIsLoading(false)
         return
+      }
+
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', formData.email)
+        localStorage.setItem('rememberedPassword', formData.password)
+      } else {
+        localStorage.removeItem('rememberedEmail')
+        localStorage.removeItem('rememberedPassword')
       }
 
       router.push('/dashboard')
@@ -94,6 +120,19 @@ export default function LoginPage() {
                 className="w-full px-4 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition placeholder:text-gray-400"
                 placeholder="••••••••"
               />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="remember"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+              />
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-700 cursor-pointer">
+                Recordar mis credenciales
+              </label>
             </div>
 
             <button
