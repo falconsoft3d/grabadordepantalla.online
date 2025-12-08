@@ -31,6 +31,12 @@ export default async function Home() {
           </div>
           <div className="flex items-center space-x-4">
             <Link 
+              href="/blog"
+              className="text-gray-700 hover:text-gray-900 font-medium transition"
+            >
+              Blog
+            </Link>
+            <Link 
               href="/login"
               className="text-gray-700 hover:text-gray-900 font-medium transition"
             >
