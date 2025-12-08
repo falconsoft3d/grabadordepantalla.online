@@ -605,7 +605,7 @@ export default function DashboardPage() {
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {sidebarOpen ? (
             <>
-              <Link href="/dashboard" className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                   <FaVideo className="text-white text-sm" />
                 </div>
