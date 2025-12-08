@@ -35,6 +35,7 @@ export async function setSession(userId: string, email: string, name?: string) {
   cookies().set('session', session, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
     maxAge: 60 * 60 * 24, // 24 hours
     path: '/',
   })

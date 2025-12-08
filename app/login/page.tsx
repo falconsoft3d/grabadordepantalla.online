@@ -62,8 +62,8 @@ export default function LoginPage() {
         localStorage.removeItem('rememberedPassword')
       }
 
-      router.push('/dashboard')
-      router.refresh()
+      // Usar window.location para forzar recarga completa y asegurar que la cookie se lea
+      window.location.href = '/dashboard'
     } catch (error) {
       setError('Algo salió mal')
       setIsLoading(false)
